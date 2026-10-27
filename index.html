@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Family Museum — 3D Ancestral Archive</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#10141a;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#222}#app,canvas{width:100%;height:100%;display:block}.hud{position:fixed;inset:0;pointer-events:none}.top{pointer-events:auto;position:absolute;left:14px;right:14px;top:14px;display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap}.panel,.nav,.card,.help{background:rgba(255,252,246,.95);border:1px solid #d9d0c0;backdrop-filter:blur(8px);box-shadow:0 8px 26px rgba(0,0,0,.2)}.panel{padding:10px 13px;border-radius:14px}.panel strong{display:block;font-family:Georgia,serif}.panel small{color:#69717d}.btn{border:1px solid #d7cdbc;background:white;border-radius:10px;padding:9px 11px;cursor:pointer;font:inherit}.nav{pointer-events:auto;position:absolute;left:14px;bottom:14px;display:flex;gap:6px;padding:7px;border-radius:14px;max-width:calc(100% - 28px);overflow:auto}.nav .btn{white-space:nowrap}.help{position:absolute;left:14px;top:85px;padding:9px 11px;border-radius:12px;font-size:12px;max-width:300px}.card{pointer-events:auto;position:absolute;right:14px;top:84px;width:min(390px,calc(100% - 28px));max-height:calc(100% - 170px);overflow:auto;border-radius:18px;padding:18px;transform:translateX(calc(100% + 30px));transition:.25s}.card.open{transform:translateX(0)}.card h2{font-family:Georgia,serif;margin:0 28px 3px 0}.muted{color:#6b7280;font-size:13px}.badge{display:inline-block;margin-top:9px;border:1px solid #d9d0c0;border-radius:999px;padding:5px 8px;font-size:12px}.section{margin-top:15px}.section h3{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:#6b7280;margin:0 0 6px}.section p{margin:0;line-height:1.5}.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{border:1px solid #ddd2c1;border-radius:999px;background:#fff;padding:5px 7px;font-size:12px}.close{position:absolute;right:10px;top:8px;border:0;background:transparent;font-size:25px;cursor:pointer}@media(max-width:680px){.help{top:auto;bottom:78px;max-width:calc(100% - 28px)}.panel small{display:none}.card{top:75px}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="hud">
+  <div class="top">
+    <div class="panel"><strong>The Family Museum</strong><small>3D ancestral archive · first live build</small></div>
+    <div class="panel"><button class="btn" id="home">Entrance Hall</button> <button class="btn" id="privacy">Public-safe mode</button></div>
+  </div>
+  <div class="help">Drag to look around · scroll/pinch to zoom · tap a framed ancestor to open their exhibit.</div>
+  <div class="nav" id="nav"></div>
+  <aside class="card" id="card"><button class="close" id="close">×</button><h2 id="name"></h2><div class="muted" id="dates"></div><div class="badge" id="confidence"></div><div class="section"><h3>Story</h3><p id="story"></p></div><div class="section"><h3>Occupation / role</h3><p id="occupation"></p></div><div class="section"><h3>Places</h3><div class="chips" id="places"></div></div><div class="section"><h3>Records & objects</h3><div class="chips" id="objects"></div></div></aside>
+</div>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.181.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.181.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+
+const rooms=[
+{id:'cape',name:'Cape Origins',x:0,color:0xd9b36c},
+{id:'huguenot',name:'Huguenot Passage',x:20,color:0xc9857a},
+{id:'raunds',name:'Raunds Workshop',x:40,color:0x88a98f},
+{id:'yorkshire',name:'Yorkshire Industrial Room',x:60,color:0x809bb7},
+{id:'mcmillan',name:'McMillan Wing',x:80,color:0x9e8bb8}
+];
+const exhibits=[
+{room:'cape',name:'Jan Pietersz Louw',dates:'1628 · North Holland → Cape 1659',confidence:'Documented',occupation:'Free burgher / early Cape settler',story:'Recorded at the Cape from 1659, only a few years after the Dutch settlement began. His descendants form one of the earliest European-settler lines currently identified in the family.',places:['North Holland','Liesbeek River','Cape of Good Hope'],objects:['Free-burgher records','17th-century Cape maps','Louw family records']},
+{room:'cape',name:'Jan Jansz Swart',dates:'c.1646 · Hoorn, Netherlands',confidence:'Documented',occupation:'VOC-associated settler / religious lay worker',story:'An early Cape Swart progenitor whose descendants recur through several later branches of the family.',places:['Hoorn','Stellenbosch','Cape Colony'],objects:['Church records','VOC context','Swart genealogy']},
+{room:'cape',name:'Anna Maria Swart',dates:'1891–1970',confidence:'Documented',occupation:'Family role — further research pending',story:'A direct Swart ancestor who married into the Barnard family. Her ancestry reaches into early Cape Dutch and Huguenot lines.',places:['South Africa'],objects:['Marriage records','Family-tree records','Photographs to source']},
+{room:'huguenot',name:'Jean du Buis / de Bus',dates:'1670 · Guînes → Cape 1688',confidence:'Documented',occupation:'French Huguenot refugee / settler',story:'Born near Guînes in French Flanders. He travelled from the Netherlands aboard the Oosterland and reached the Cape in 1688. His daughter Sara married into the Swart line.',places:['Guînes','Middelburg','Table Bay'],objects:['Oosterland voyage','Huguenot registers','Guînes records']},
+{room:'huguenot',name:'Sara Jacob',dates:'1677 · French Flanders',confidence:'Documented',occupation:'Huguenot refugee descendant',story:'Daughter of Pierre Jacob and Suzanne de Vos. Her family joined the Huguenot migration to the Cape in 1688.',places:['Vieille-Église','Guînes','Cape'],objects:['Schelde voyage','Huguenot register','Family baptisms']},
+{room:'huguenot',name:'Jacques Malan',dates:'c.1670 · Provence → Cape 1688',confidence:'Documented',occupation:'Huguenot refugee settler',story:'A separate French Protestant migration route within the Louw ancestry.',places:['Provence','Rotterdam','Cape'],objects:['Ship China','Huguenot records','Provence maps']},
+{room:'raunds',name:'John Whiteman',dates:'1735–1801',confidence:'Documented',occupation:'Shoemaker',story:'A Raunds ancestor whose occupation is preserved in parish material. The Whiteman line later flows through Horn and Webb into Whitney.',places:['Little Addington','Raunds','St Peter’s Church'],objects:['Shoemaker tools','Parish register','Burial record']},
+{room:'raunds',name:'Ernest James Merrill Whitney',dates:'1920–1973',confidence:'Documented',occupation:'Boot & shoe stitcher',story:'Born in Raunds into its boot-and-shoe industry. He married Ivy Moore in 1947 and later died in Pietermaritzburg, marking an England-to-South-Africa migration point.',places:['Raunds','Wellingborough','Pietermaritzburg'],objects:['1939 Register','Marriage index','Shoe-industry photographs']},
+{room:'yorkshire',name:'Ivy Moore',dates:'25 Dec 1923–2007',confidence:'Documented',occupation:'Further research pending',story:'Born on Christmas Day in Rotherham. Her mother’s maiden surname was Adamson; the branch is being expanded through Yorkshire records.',places:['Rotherham','Wellingborough','Lincolnshire'],objects:['Birth registration','Marriage record','Family photographs']},
+{room:'yorkshire',name:'Sydney John Moore',dates:'20th century',confidence:'Strong lead',occupation:'Occupation still being verified',story:'The Moore branch is tied to Rotherham and Swinton. Mining, wartime deaths and remarriage stories are being separated into records versus oral family tradition.',places:['Rotherham','Swinton','Manvers'],objects:['Civil certificates','Colliery records','WWI records']},
+{room:'yorkshire',name:'Ethel Mae Adamson',dates:'20th century',confidence:'Family-confirmed',occupation:'Further research pending',story:'Ivy Moore’s mother. This branch remains open for deeper Yorkshire research.',places:['Yorkshire','Rotherham area'],objects:['Birth and marriage indexes','Census records','Family photographs']},
+{room:'mcmillan',name:'David McMillan',dates:'died around Christmas 2022',confidence:'Family information',occupation:'Further research pending',story:'Paternal grandfather. Family recollection links him with Grantham and Glasgow; exact civil records are still being matched.',places:['Grantham','Glasgow'],objects:['Death notice','Marriage record','Address records']},
+{room:'mcmillan',name:'Pamela McMillan',dates:'20th century',confidence:'Family information',occupation:'Further research pending',story:'Paternal grandmother. Her maiden surname is the most valuable missing clue for unlocking the previous generation.',places:['England / Scotland — to confirm'],objects:['Marriage certificate','Birth index','Family photographs']},
+{room:'mcmillan',name:'Roderick McMillan',dates:'Living generation',confidence:'Family information',occupation:'Public details intentionally limited',story:'Modern connecting generation. The public museum deliberately redacts exact identifying details for living relatives.',places:['Lincolnshire'],objects:['Private family archive']}
+];
+const app=document.getElementById('app');
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x11151c);scene.fog=new THREE.Fog(0x11151c,45,135);
+const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,250);camera.position.set(-10,8,20);
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;app.appendChild(renderer.domElement);
+const pmrem=new THREE.PMREMGenerator(renderer);scene.environment=pmrem.fromScene(new RoomEnvironment(),.04).texture;
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.minDistance=4;controls.maxDistance=24;controls.target.set(30,2,0);
+scene.add(new THREE.HemisphereLight(0xfff4e8,0x263142,2.3));const sun=new THREE.DirectionalLight(0xffefd8,3);sun.position.set(8,16,10);scene.add(sun);
+const museum=new THREE.Group();scene.add(museum);const clickables=[];
+const floorMat=new THREE.MeshStandardMaterial({color:0x6f6458,roughness:.8}),wallMat=new THREE.MeshStandardMaterial({color:0xeee7db,roughness:.95});
+function box(parent,size,pos,mat){const m=new THREE.Mesh(new THREE.BoxGeometry(...size),mat);m.position.set(...pos);m.receiveShadow=true;m.castShadow=true;parent.add(m);return m}
+function canvasTex(ex){const c=document.createElement('canvas');c.width=900;c.height=560;const x=c.getContext('2d');x.fillStyle='#faf4e9';x.fillRect(0,0,900,560);x.fillStyle='#26211d';x.font='bold 48px Georgia';x.textAlign='center';x.fillText(ex.name,450,170);x.fillStyle='#6b6259';x.font='28px system-ui';x.fillText(ex.dates,450,230);x.font='25px system-ui';x.fillText(ex.occupation.slice(0,52),450,300);x.fillStyle='#746554';x.font='22px system-ui';x.fillText('Tap to open exhibit',450,405);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t}
+function label(text){const c=document.createElement('canvas');c.width=1024;c.height=220;const x=c.getContext('2d');x.fillStyle='#f6efe4';x.fillRect(0,0,1024,220);x.fillStyle='#25211e';x.font='bold 60px Georgia';x.textAlign='center';x.textBaseline='middle';x.fillText(text,512,110);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return new THREE.Mesh(new THREE.PlaneGeometry(5.7,1.23),new THREE.MeshBasicMaterial({map:t}))}
+function frame(ex){const g=new THREE.Group(),outer=box(g,[3.6,2.45,.18],[0,0,0],new THREE.MeshStandardMaterial({color:0x55483b})),inner=box(g,[3.18,2.04,.08],[0,0,.13],new THREE.MeshBasicMaterial({map:canvasTex(ex)}));outer.userData.ex=ex;inner.userData.ex=ex;clickables.push(outer,inner);return g}
+rooms.forEach((r,idx)=>{const g=new THREE.Group();g.position.x=r.x;museum.add(g);box(g,[18,.4,13],[0,-.2,0],floorMat);box(g,[18,8,.4],[0,3.8,-6.3],wallMat);box(g,[.4,8,13],[-9,3.8,0],wallMat);box(g,[.4,8,13],[9,3.8,0],wallMat);if(idx===0)box(g,[18,8,.4],[0,3.8,6.3],wallMat);const l=label(r.name);l.position.set(0,6,-6.05);g.add(l);const spots=[[-5,3.2,-5.95],[0,3.2,-5.95],[5,3.2,-5.95],[-5,3.2,5.95],[0,3.2,5.95],[5,3.2,5.95]];exhibits.filter(e=>e.room===r.id).forEach((ex,i)=>{const f=frame(ex),s=spots[i];f.position.set(...s);if(s[2]>0)f.rotation.y=Math.PI;g.add(f)});const art=new THREE.Mesh(new THREE.OctahedronGeometry(1.1),new THREE.MeshStandardMaterial({color:r.color,metalness:.2,roughness:.35}));art.position.set(0,1.6,0);g.add(art);box(g,[2.7,.8,2.7],[0,.4,0],new THREE.MeshStandardMaterial({color:0xc8baa6}))});
+for(let i=0;i<rooms.length-1;i++){const x=(rooms[i].x+rooms[i+1].x)/2;box(museum,[2.8,.35,5],[x,-.1,0],floorMat)}
+const nav=document.getElementById('nav');function move(id){const r=rooms.find(x=>x.id===id);camera.position.set(r.x,5.3,11.5);controls.target.set(r.x,2.5,0);document.getElementById('card').classList.remove('open')}rooms.forEach(r=>{const b=document.createElement('button');b.className='btn';b.textContent=r.name;b.onclick=()=>move(r.id);nav.appendChild(b)});document.getElementById('home').onclick=()=>{camera.position.set(-10,8,20);controls.target.set(30,2,0);document.getElementById('card').classList.remove('open')};
+function chips(id,items){const el=document.getElementById(id);el.innerHTML='';items.forEach(v=>{const s=document.createElement('span');s.className='chip';s.textContent=v;el.appendChild(s)})}
+function open(ex){document.getElementById('name').textContent=ex.name;document.getElementById('dates').textContent=ex.dates;document.getElementById('confidence').textContent=ex.confidence;document.getElementById('story').textContent=ex.story;document.getElementById('occupation').textContent=ex.occupation;chips('places',ex.places);chips('objects',ex.objects);document.getElementById('card').classList.add('open')}
+document.getElementById('close').onclick=()=>document.getElementById('card').classList.remove('open');document.getElementById('privacy').onclick=()=>alert('This public build intentionally limits identifying details for living relatives.');
+const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();renderer.domElement.addEventListener('pointerup',e=>{const r=renderer.domElement.getBoundingClientRect();pointer.x=((e.clientX-r.left)/r.width)*2-1;pointer.y=-((e.clientY-r.top)/r.height)*2+1;ray.setFromCamera(pointer,camera);const hit=ray.intersectObjects(clickables,false)[0];if(hit?.object.userData.ex)open(hit.object.userData.ex)});
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});(function loop(){requestAnimationFrame(loop);controls.update();renderer.render(scene,camera)})();
+</script>
+</body>
+</html>
