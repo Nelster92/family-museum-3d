@@ -4,6 +4,7 @@
     .catch(err=>console.warn('v0.6 enrichment failed; continuing with stable data',err))
     .then(()=>load('updates-v07.js').catch(err=>console.warn('v0.7 notable-relations layer failed; continuing',err)))
     .then(()=>load('updates-v08.js').catch(err=>console.warn('v0.8 anthropology layer failed; continuing',err)))
+    .then(()=>load('updates-v09.js').catch(err=>console.warn('v0.9 women/environment layer failed; continuing',err)))
     .finally(()=>load('app-core.js').then(()=>{
       const rc=document.getElementById('roomCount');if(rc)rc.textContent='Gallery 1 of '+rooms.length;
       const tl=document.getElementById('timelineBtn');if(tl&&!document.getElementById('drawer').classList.contains('open'))tl.textContent='Timeline';
