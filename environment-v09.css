@@ -1,0 +1,59 @@
+/* v0.9 environmental gallery layer */
+.room .room-world::before,.room .room-world::after{content:"";position:absolute;pointer-events:none;z-index:2}
+
+/* Cape household: limewashed farm interior, timber beams, broad hearth */
+.room[data-room="cape"] .back,.room[data-room="cape-life"] .back,.room[data-room="women-cape"] .back{background:linear-gradient(#eee4d0,#d8c5a7);box-shadow:inset 0 -55px 0 #a78762,inset 0 0 90px rgba(70,48,25,.18)}
+.room[data-room="cape"] .ceiling,.room[data-room="cape-life"] .ceiling,.room[data-room="women-cape"] .ceiling{background:repeating-linear-gradient(90deg,#3f2b20 0 16px,#c9b79e 16px 92px)}
+.room[data-room="cape"] .floor,.room[data-room="cape-life"] .floor,.room[data-room="women-cape"] .floor{background:repeating-linear-gradient(0deg,#b39167 0 42px,#a27f59 42px 45px)}
+.room[data-room="cape"] .room-world::before,.room[data-room="cape-life"] .room-world::before,.room[data-room="women-cape"] .room-world::before{left:23%;bottom:15%;width:115px;height:135px;background:linear-gradient(#554033,#2e211b);border:12px solid #b7966b;border-bottom-width:6px;box-shadow:0 0 30px rgba(255,173,70,.18) inset}
+.room[data-room="cape"] .room-world::after,.room[data-room="cape-life"] .room-world::after,.room[data-room="women-cape"] .room-world::after{right:22%;bottom:18%;width:150px;height:68px;background:#70513b;box-shadow:0 12px 0 #4d3628;border-top:8px solid #2e211b}
+
+/* Huguenot passage: ship deck rather than white gallery */
+.room[data-room="huguenot"] .back,.room[data-room="huguenot-life"] .back{background:linear-gradient(#6e8490 0 34%,#9da8a8 34% 42%,#5b4735 42% 100%);border-color:#3f342b;box-shadow:inset 0 -30px 60px rgba(0,0,0,.35)}
+.room[data-room="huguenot"] .side,.room[data-room="huguenot-life"] .side{background:repeating-linear-gradient(0deg,#554130 0 34px,#3f3025 34px 38px);border-color:#2d241e}
+.room[data-room="huguenot"] .floor,.room[data-room="huguenot-life"] .floor{background:repeating-linear-gradient(90deg,#76563c 0 74px,#422f23 74px 79px)}
+.room[data-room="huguenot"] .ceiling,.room[data-room="huguenot-life"] .ceiling{background:repeating-linear-gradient(90deg,#3f2f24 0 14px,#6d523c 14px 74px)}
+.room[data-room="huguenot"] .room-world::before,.room[data-room="huguenot-life"] .room-world::before{left:50%;top:8%;width:6px;height:52%;background:#2a211b;box-shadow:-72px 0 0 -1px #3b2d23,72px 0 0 -1px #3b2d23;transform:translateX(-50%)}
+.room[data-room="huguenot"] .room-world::after,.room[data-room="huguenot-life"] .room-world::after{left:20%;right:20%;top:42%;height:6px;background:#2f241d;box-shadow:0 19px 0 #48372a,0 38px 0 #48372a}
+
+/* Raunds: compact shoemaker / closing workshop */
+.room[data-room="raunds"] .back,.room[data-room="raunds-life"] .back,.room[data-room="women-raunds"] .back{background:linear-gradient(#c9c2ae 0 64%,#7a654b 64%);box-shadow:inset 0 0 60px rgba(44,36,26,.25)}
+.room[data-room="raunds"] .floor,.room[data-room="raunds-life"] .floor,.room[data-room="women-raunds"] .floor{background:repeating-linear-gradient(90deg,#4d3a2a 0 68px,#37291f 68px 72px)}
+.room[data-room="raunds"] .room-world::before,.room[data-room="raunds-life"] .room-world::before,.room[data-room="women-raunds"] .room-world::before{left:21%;bottom:16%;width:180px;height:82px;background:#573f2d;border-top:12px solid #2e2219;box-shadow:0 11px 0 #30231b,122px -7px 0 -39px #1f1914}
+.room[data-room="raunds"] .room-world::after,.room[data-room="raunds-life"] .room-world::after,.room[data-room="women-raunds"] .room-world::after{right:21%;bottom:17%;width:82px;height:120px;border:10px solid #3d2e23;border-radius:46% 46% 18% 18%;background:radial-gradient(circle at 50% 26%,#b7a26e 0 8px,#342821 9px 15px,transparent 16px),linear-gradient(#514034,#30251f)}
+.room[data-room="raunds"] .artifact,.room[data-room="raunds-life"] .artifact,.room[data-room="women-raunds"] .artifact{width:92px;height:40px;border-radius:45% 65% 25% 30%;transform:translateX(-50%) rotate(-11deg);background:#4b2f21}
+
+/* Yorkshire: mining household / industrial room */
+.room[data-room="yorkshire"] .back,.room[data-room="yorkshire-life"] .back{background:linear-gradient(#7d8584 0 42%,#61554b 42% 100%);border-color:#4e4944;box-shadow:inset 0 0 80px rgba(0,0,0,.3)}
+.room[data-room="yorkshire"] .side,.room[data-room="yorkshire-life"] .side{background:linear-gradient(#8d9290,#5a514a)}
+.room[data-room="yorkshire"] .floor,.room[data-room="yorkshire-life"] .floor{background:repeating-linear-gradient(90deg,#352c27 0 68px,#201b18 68px 73px)}
+.room[data-room="yorkshire"] .room-world::before,.room[data-room="yorkshire-life"] .room-world::before{left:22%;bottom:15%;width:120px;height:155px;background:#242321;border:10px solid #54473e;box-shadow:inset 0 -45px 28px rgba(255,111,35,.2)}
+.room[data-room="yorkshire"] .room-world::after,.room[data-room="yorkshire-life"] .room-world::after{right:22%;bottom:18%;width:115px;height:55px;background:#5f4e42;border-radius:4px;box-shadow:0 12px 0 #342a24}
+
+/* Gretna: stark wartime industrial shed */
+.room[data-room="women-gretna"] .back{background:linear-gradient(#8c9290 0 58%,#5c625f 58%);border-color:#505654;background-image:linear-gradient(rgba(255,255,255,.04),rgba(0,0,0,.12)),repeating-linear-gradient(90deg,transparent 0 116px,rgba(46,54,52,.55) 116px 121px)}
+.room[data-room="women-gretna"] .floor{background:repeating-linear-gradient(90deg,#696c67 0 72px,#4e514d 72px 77px)}
+.room[data-room="women-gretna"] .ceiling{background:repeating-linear-gradient(90deg,#4a504e 0 13px,#777b76 13px 92px)}
+.room[data-room="women-gretna"] .room-world::before{left:19%;right:19%;bottom:17%;height:38px;background:#353c3a;box-shadow:0 -70px 0 -13px #646c68,0 -70px 0 -12px #323836}
+.room[data-room="women-gretna"] .room-world::after{right:24%;top:29%;width:60px;height:92px;border:6px solid #373d3b;background:repeating-linear-gradient(0deg,#c0b889 0 8px,#898463 8px 11px);transform:rotate(-5deg)}
+
+/* Ivy: mid-century domestic interior */
+.room[data-room="women-ivy"] .back,.room[data-room="migration-life"] .back{background:linear-gradient(#d8d0b8 0 63%,#9e765c 63%);background-image:repeating-linear-gradient(90deg,rgba(95,79,56,.08) 0 2px,transparent 2px 48px),linear-gradient(#d8d0b8 0 63%,#9e765c 63%)}
+.room[data-room="women-ivy"] .floor,.room[data-room="migration-life"] .floor{background:repeating-linear-gradient(90deg,#a06f4f 0 65px,#795039 65px 70px)}
+.room[data-room="women-ivy"] .room-world::before,.room[data-room="migration-life"] .room-world::before{left:22%;bottom:16%;width:142px;height:78px;background:#6b4b37;border-radius:16px 16px 7px 7px;box-shadow:105px 6px 0 -22px #6b4b37}
+.room[data-room="women-ivy"] .room-world::after,.room[data-room="migration-life"] .room-world::after{right:23%;top:30%;width:76px;height:118px;background:linear-gradient(90deg,#9a6e48,#d2b37c,#9a6e48);border-radius:38px 38px 8px 8px;box-shadow:0 112px 0 -30px #684833}
+
+/* McMillan / archive environments */
+.room[data-room="mcmillan"] .back{background:linear-gradient(#b7bcc2 0 36%,#897461 36% 100%);box-shadow:inset 0 0 75px rgba(37,36,42,.2)}
+.room[data-room="mcmillan"] .room-world::before{left:20%;right:20%;top:41%;height:8px;background:#393a3d;box-shadow:0 21px 0 #55575a}
+.room[data-room="archive"] .back,.room[data-room="class-gallery"] .back,.room[data-room="notable"] .back{background:linear-gradient(#352f2a,#1f1b18);border-color:#4a4038;box-shadow:inset 0 0 80px rgba(0,0,0,.55)}
+.room[data-room="archive"] .room-title,.room[data-room="class-gallery"] .room-title,.room[data-room="notable"] .room-title{color:#eee3d4;text-shadow:0 1px #000}.room[data-room="archive"] .room-title span,.room[data-room="class-gallery"] .room-title span,.room[data-room="notable"] .room-title span{color:#c6b49f}
+
+/* Women wing visual identity */
+.women-wing-btn{background:#f3e4df;border-color:#c49f96}.room[data-room^="women-"] .room-title::before{content:"WOMEN OF THE FAMILY";display:block;font:700 9px Inter,system-ui;letter-spacing:.24em;color:#805e57;margin-bottom:6px}
+.room[data-room^="women-"] .exhibit{border-color:#6c554c;background:#fff9f1}
+.room[data-room^="women-"] .context-plaque{border-top:4px solid #a87972}
+
+@media(max-width:760px){
+  .room .room-world::before,.room .room-world::after{opacity:.6}
+}
