@@ -7,7 +7,7 @@
     .then(()=>load('updates-v09.js').catch(err=>console.warn('v0.9 women/environment layer failed; continuing',err)))
     .then(()=>load('updates-v10.js').catch(err=>console.warn('v1.0 deep-research layer failed; continuing',err)))
     .then(()=>load('updates-v11.js').catch(err=>console.warn('v1.1 women and heraldry layer failed; continuing',err)))
-    .finally(()=>load('app-core.js').then(()=>load('museum-v11-ui.js').catch(err=>console.warn('Illustrated story atlas unavailable',err))).then(()=>{
+    .finally(()=>load('app-core.js').then(()=>load('museum-v11-ui.js').catch(err=>console.warn('Illustrated story atlas unavailable',err)).then(()=>load('heraldry-v11.js').catch(err=>console.warn('Heraldry plates unavailable',err)))).then(()=>{
       const rc=document.getElementById('roomCount');if(rc)rc.textContent='Gallery 1 of '+rooms.length;
       const tl=document.getElementById('timelineBtn');if(tl&&!document.getElementById('drawer').classList.contains('open'))tl.textContent='Timeline';
     }).catch(err=>{console.error(err);const st=document.getElementById('status');if(st)st.textContent='Museum core failed to load';}));
